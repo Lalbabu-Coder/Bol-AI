@@ -1,4 +1,4 @@
-import pdfParse from 'pdf-parse';
+import { PDFParse } from 'pdf-parse';
 import mammoth from 'mammoth';
 import { Document } from '../../models/Document.js';
 import { DocumentChunk } from '../../models/DocumentChunk.js';
@@ -64,8 +64,10 @@ export const processDocument = async (documentId, fileBuffer, mimeType) => {
 
     // 2. Parse file content depending on mimeType
     if (mimeType === 'application/pdf') {
-      const parsedPdf = await pdfParse(fileBuffer);
+      const parser = new PDFParse({ data: fileBuffer });
+      const parsedPdf = await parser.getText();
       rawText = parsedPdf.text;
+      await parser.destroy();
     } else if (
       mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
       mimeType === 'application/msword'

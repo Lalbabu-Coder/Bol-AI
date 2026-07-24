@@ -1,4 +1,4 @@
-import { config } from '../config/config.js';
+import { config } from '../../config/config.js';
 
 /**
  * Manually computes the cosine similarity between two vectors.
