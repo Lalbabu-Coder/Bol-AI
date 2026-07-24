@@ -1,0 +1,75 @@
+# ==============================================================================
+# DEPLOYMENT WORKFLOW CONFIGURATION
+# ==============================================================================
+# This workflow automates building and pushing production Docker containers to AWS ECR,
+# followed by triggering deployments on AWS App Runner.
+#
+# REQUIRED GITHUB REPOSITORY SECRETS:
+# Make sure to set the following secrets in Repository Settings -> Secrets -> Actions:
+#
+# - AWS_ACCESS_KEY_ID: AWS access key for deployment IAM user.
+# - AWS_SECRET_ACCESS_KEY: AWS secret access key for deployment IAM user.
+# - AWS_REGION: The AWS Region (e.g. ap-south-1).
+# - ECR_SERVER_REPO: Name of the server ECR Repository (e.g. bolo-server).
+# - ECR_CLIENT_REPO: Name of the client ECR Repository (e.g. bolo-client).
+# - AWS_ACCOUNT_ID: The 12-digit AWS Account ID (to resolve ECR endpoints).
+# - APP_RUNNER_SERVER_ARN: The ARN of the server's AWS App Runner service.
+# - APP_RUNNER_CLIENT_ARN: The ARN of the client's AWS App Runner service.
+# ==============================================================================
+
+name: Production CD Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION || 'ap-south-1' }}
+
+    - name: Log in to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # Build and Push Server Image
+    - name: Build & Push Server to ECR
+      uses: docker/build-push-action@v5
+      with:
+        context: ./server
+        push: true
+        tags: |
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION || 'ap-south-1' }}.amazonaws.com/${{ secrets.ECR_SERVER_REPO }}:latest
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION || 'ap-south-1' }}.amazonaws.com/${{ secrets.ECR_SERVER_REPO }}:${{ github.sha }}
+
+    # Build and Push Client Image
+    - name: Build & Push Client to ECR
+      uses: docker/build-push-action@v5
+      with:
+        context: ./client
+        push: true
+        tags: |
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION || 'ap-south-1' }}.amazonaws.com/${{ secrets.ECR_CLIENT_REPO }}:latest
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION || 'ap-south-1' }}.amazonaws.com/${{ secrets.ECR_CLIENT_REPO }}:${{ github.sha }}
+
+    # Trigger deployment for Server
+    - name: Deploy Server to AWS App Runner
+      run: |
+        aws apprunner start-deployment --service-arn ${{ secrets.APP_RUNNER_SERVER_ARN }}
+
+    # Trigger deployment for Client
+    - name: Deploy Client to AWS App Runner
+      run: |
+        aws apprunner start-deployment --service-arn ${{ secrets.APP_RUNNER_CLIENT_ARN }}

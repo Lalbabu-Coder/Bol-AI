@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: bolo-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: bolo-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: bolo-server
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/bolo-ai
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=development_jwt_secret_must_be_long_and_secure_value_here
+      - JWT_REFRESH_SECRET=development_jwt_refresh_secret_must_be_long_and_secure_value_here
+      - CLIENT_URL=http://localhost
+      - ENCRYPTION_KEY=12345678901234567890123456789012
+      - OPENAI_API_KEY=dummy_openai_key
+      - RAZORPAY_KEY_ID=dummy_key_id
+      - RAZORPAY_KEY_SECRET=dummy_key_secret
+      - RAZORPAY_WEBHOOK_SECRET=dummy_webhook_secret
+      - META_APP_SECRET=dummy_meta_secret
+      - SUPERADMIN_EMAIL=admin@bolo.ai
+      - SUPERADMIN_PASSWORD=SuperadminPassword123!
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: bolo-client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
+volumes:
+  mongo-data:
+  redis-data:

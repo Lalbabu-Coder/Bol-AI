@@ -1,0 +1,78 @@
+name: CI Build & Verify
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: |
+          server/package-lock.json
+          client/package-lock.json
+
+    - name: Install Server Dependencies
+      run: |
+        cd server
+        npm ci
+
+    - name: Install Client Dependencies
+      run: |
+        cd client
+        npm ci
+
+    - name: Run Server Audit
+      run: |
+        cd server
+        npm audit --audit-level=critical
+
+    - name: Run Client Audit
+      run: |
+        cd client
+        npm audit --audit-level=critical
+
+    - name: Run Server Tests
+      run: |
+        cd server
+        npm test
+
+    - name: Run Client Tests
+      run: |
+        cd client
+        npm test
+
+    - name: Build Client Static Assets
+      run: |
+        cd client
+        npm run build
+      env:
+        VITE_API_URL: "/"
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Server Docker Image (Validation)
+      uses: docker/build-push-action@v5
+      with:
+        context: ./server
+        push: false
+        tags: bolo-server:latest
+
+    - name: Build Client Docker Image (Validation)
+      uses: docker/build-push-action@v5
+      with:
+        context: ./client
+        push: false
+        tags: bolo-client:latest
