@@ -117,10 +117,12 @@ export const AdminCompanies = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Companies Directory</h1>
-          <p className="text-slate-400 text-sm mt-1">
+      <div className="space-y-6 pb-12 font-sans">
+        
+        {/* Header */}
+        <div className="border-b border-zinc-800/80 pb-5">
+          <h1 className="text-2xl font-bold font-heading text-zinc-100 tracking-tight">Companies Directory</h1>
+          <p className="text-zinc-400 text-xs mt-1">
             Monitor workspace tenants, modify plans, and start audit-logged impersonation sessions.
           </p>
         </div>
@@ -132,13 +134,13 @@ export const AdminCompanies = () => {
             placeholder="Search by name or slug..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-red-500 w-full sm:w-64"
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition w-full sm:w-64"
           />
 
           <select
             value={plan}
             onChange={(e) => setPlan(e.target.value)}
-            className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-300 focus:outline-none focus:border-red-500"
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-indigo-500 transition"
           >
             <option value="all">All Plans</option>
             <option value="starter">Starter</option>
@@ -149,7 +151,7 @@ export const AdminCompanies = () => {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-300 focus:outline-none focus:border-red-500"
+            className="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-indigo-500 transition"
           >
             <option value="all">All Statuses</option>
             <option value="active">Active Paid</option>
@@ -160,52 +162,48 @@ export const AdminCompanies = () => {
 
           <button
             type="submit"
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-bold transition shrink-0"
+            className="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 rounded-lg text-xs font-medium transition shrink-0"
           >
             Search
           </button>
         </form>
 
         {/* Directory Grid Table */}
-        <div className="glass rounded-2xl overflow-hidden border border-slate-900/60">
+        <div className="saas-panel overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-900/40 border-b border-slate-900 text-slate-400 font-bold uppercase tracking-wider">
-                  <th className="p-4">Company</th>
-                  <th className="p-4">Plan</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4 text-center">All-time Chats</th>
-                  <th className="p-4">Last Activity</th>
-                  <th className="p-4">Signup Date</th>
-                  <th className="p-4">Active</th>
-                  <th className="p-4 text-right">Actions</th>
+                <tr className="border-b border-zinc-800/80 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+                  <th className="p-3.5 pl-4">Company</th>
+                  <th className="p-3.5">Plan</th>
+                  <th className="p-3.5">Status</th>
+                  <th className="p-3.5 text-center">All-time Chats</th>
+                  <th className="p-3.5">Last Activity</th>
+                  <th className="p-3.5">Signup Date</th>
+                  <th className="p-3.5">Active</th>
+                  <th className="p-3.5 text-right pr-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-900/40">
+              <tbody className="divide-y divide-zinc-800/60 text-xs">
                 {companies.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-900/20 text-slate-300 transition">
-                    <td className="p-4 font-bold text-white">{c.name}</td>
-                    <td className="p-4 capitalize">{c.plan}</td>
-                    <td className="p-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase ${
-                        c.status === 'active' 
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                          : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                      }`}>
+                  <tr key={c.id} className="hover:bg-zinc-900/40 text-zinc-300 transition">
+                    <td className="p-3.5 pl-4 font-medium text-zinc-100">{c.name}</td>
+                    <td className="p-3.5 capitalize text-zinc-300">{c.plan}</td>
+                    <td className="p-3.5">
+                      <span className={c.status === 'active' ? 'saas-badge-emerald uppercase' : 'saas-badge-rose uppercase'}>
                         {c.status}
                       </span>
                     </td>
-                    <td className="p-4 text-center font-semibold">{c.totalConversations}</td>
-                    <td className="p-4 text-slate-500">{new Date(c.lastActivityDate).toLocaleDateString()}</td>
-                    <td className="p-4 text-slate-500">{new Date(c.signupDate).toLocaleDateString()}</td>
-                    <td className="p-4">
-                      <span className={`w-2 h-2 rounded-full inline-block ${c.isActive ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                    <td className="p-3.5 text-center font-medium text-zinc-200">{c.totalConversations}</td>
+                    <td className="p-3.5 text-zinc-400">{new Date(c.lastActivityDate).toLocaleDateString()}</td>
+                    <td className="p-3.5 text-zinc-400">{new Date(c.signupDate).toLocaleDateString()}</td>
+                    <td className="p-3.5">
+                      <span className={`w-2 h-2 rounded-full inline-block ${c.isActive ? 'bg-emerald-500' : 'bg-rose-500'}`} />
                     </td>
-                    <td className="p-4 text-right">
+                    <td className="p-3.5 text-right pr-4">
                       <button
                         onClick={() => handleOpenDetail(c.id)}
-                        className="px-2.5 py-1 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 rounded-lg font-semibold transition"
+                        className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 rounded-lg text-xs font-medium transition"
                       >
                         Manage
                       </button>
@@ -214,7 +212,7 @@ export const AdminCompanies = () => {
                 ))}
                 {!loading && companies.length === 0 && (
                   <tr>
-                    <td colSpan="8" className="p-8 text-center text-slate-600 italic">
+                    <td colSpan="8" className="p-8 text-center text-zinc-500 italic">
                       No companies found matching filters.
                     </td>
                   </tr>
@@ -230,17 +228,17 @@ export const AdminCompanies = () => {
             <button
               disabled={page === 1}
               onClick={() => setPage(p => p - 1)}
-              className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl transition disabled:opacity-40"
+              className="px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 rounded-lg transition disabled:opacity-40"
             >
               Previous
             </button>
-            <span className="text-slate-500">
+            <span className="text-zinc-400">
               Page {page} of {totalPages}
             </span>
             <button
               disabled={page === totalPages}
               onClick={() => setPage(p => p + 1)}
-              className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl transition disabled:opacity-40"
+              className="px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 rounded-lg transition disabled:opacity-40"
             >
               Next
             </button>
@@ -249,17 +247,17 @@ export const AdminCompanies = () => {
 
         {/* Management Modal */}
         {selectedId && companyDetail && (
-          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 overflow-y-auto p-4 animate-in fade-in">
-            <div className="bg-slate-900 border border-slate-800 max-w-3xl w-full rounded-2xl p-6 space-y-6 shadow-2xl my-8">
+          <div className="fixed inset-0 bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center z-50 overflow-y-auto p-4">
+            <div className="bg-zinc-900 border border-zinc-800 max-w-3xl w-full rounded-2xl p-6 space-y-6 shadow-card my-8">
               {/* Header */}
-              <div className="flex justify-between items-start border-b border-slate-800/60 pb-4">
+              <div className="flex justify-between items-start border-b border-zinc-800/80 pb-4">
                 <div>
-                  <h3 className="text-lg font-black text-white">{companyDetail.company.name}</h3>
-                  <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">ID: {companyDetail.company.id}</span>
+                  <h3 className="text-lg font-bold font-heading text-zinc-100">{companyDetail.company.name}</h3>
+                  <span className="text-[11px] text-zinc-500 font-mono mt-0.5 block">ID: {companyDetail.company.id}</span>
                 </div>
                 <button
                   onClick={() => { setSelectedId(null); setCompanyDetail(null); }}
-                  className="text-slate-400 hover:text-white text-base focus:outline-none"
+                  className="text-zinc-400 hover:text-zinc-100 text-base focus:outline-none"
                 >
                   ✕
                 </button>
@@ -270,38 +268,38 @@ export const AdminCompanies = () => {
                 {/* Stats & Metadata Column */}
                 <div className="space-y-4">
                   {/* Channels connected */}
-                  <div className="p-3 bg-slate-950/40 border border-slate-950 rounded-xl space-y-2">
-                    <span className="block font-bold text-slate-500 uppercase text-[9px] tracking-wider">Integrations Status</span>
+                  <div className="p-3 bg-zinc-950 border border-zinc-800/80 rounded-xl space-y-2">
+                    <span className="block font-semibold text-zinc-400 uppercase text-[10px] tracking-wide">Integrations Status</span>
                     <div className="flex space-x-4">
-                      <span className={companyDetail.company.channels.whatsapp ? 'text-emerald-400' : 'text-slate-600'}>
+                      <span className={companyDetail.company.channels.whatsapp ? 'text-emerald-400 font-medium' : 'text-zinc-500'}>
                         ● WhatsApp {companyDetail.company.channels.whatsapp ? 'Active' : 'Locked'}
                       </span>
-                      <span className={companyDetail.company.channels.voice ? 'text-emerald-400' : 'text-slate-600'}>
+                      <span className={companyDetail.company.channels.voice ? 'text-emerald-400 font-medium' : 'text-zinc-500'}>
                         ● Voice {companyDetail.company.channels.voice ? 'Active' : 'Locked'}
                       </span>
                     </div>
                   </div>
 
                   {/* Usage Progress meters */}
-                  <div className="p-3 bg-slate-950/40 border border-slate-950 rounded-xl space-y-3">
-                    <span className="block font-bold text-slate-500 uppercase text-[9px] tracking-wider">Resource consumption this Month</span>
+                  <div className="p-3 bg-zinc-950 border border-zinc-800/80 rounded-xl space-y-3">
+                    <span className="block font-semibold text-zinc-400 uppercase text-[10px] tracking-wide">Resource Consumption this Month</span>
                     
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Conversations</span>
-                        <span className="font-semibold text-slate-300">
+                        <span className="text-zinc-400">Conversations</span>
+                        <span className="font-medium text-zinc-200">
                           {companyDetail.usage.conversationsUsed} / {companyDetail.limits.maxConversationsPerMonth}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">KB Documents</span>
-                        <span className="font-semibold text-slate-300">
+                        <span className="text-zinc-400">KB Documents</span>
+                        <span className="font-medium text-zinc-200">
                           {companyDetail.usage.docsUsed} / {companyDetail.limits.maxKnowledgeBaseDocs}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Workflows Rules</span>
-                        <span className="font-semibold text-slate-300">
+                        <span className="text-zinc-400">Workflows Rules</span>
+                        <span className="font-medium text-zinc-200">
                           {companyDetail.usage.rulesUsed} / {companyDetail.limits.maxWorkflowRules}
                         </span>
                       </div>
@@ -310,12 +308,12 @@ export const AdminCompanies = () => {
 
                   {/* Users account lists */}
                   <div className="space-y-2">
-                    <span className="block font-bold text-slate-500 uppercase text-[9px] tracking-wider">Workspace Users ({companyDetail.users.length})</span>
+                    <span className="block font-semibold text-zinc-400 uppercase text-[10px] tracking-wide">Workspace Users ({companyDetail.users.length})</span>
                     <div className="max-h-[120px] overflow-y-auto space-y-1.5 pr-1">
                       {companyDetail.users.map((u) => (
-                        <div key={u.email} className="p-2 bg-slate-950/20 border border-slate-900/60 rounded-lg flex justify-between">
-                          <span className="text-slate-300 truncate mr-2 font-medium">{u.email}</span>
-                          <span className="text-slate-500 capitalize shrink-0 font-bold">{u.role}</span>
+                        <div key={u.email} className="p-2 bg-zinc-950/60 border border-zinc-800/80 rounded-lg flex justify-between">
+                          <span className="text-zinc-300 truncate mr-2 font-medium">{u.email}</span>
+                          <span className="text-zinc-500 capitalize shrink-0 font-semibold">{u.role}</span>
                         </div>
                       ))}
                     </div>
@@ -324,27 +322,27 @@ export const AdminCompanies = () => {
 
                 {/* Overrides form column */}
                 <form onSubmit={handleSaveOverrides} className="space-y-4">
-                  <span className="block font-bold text-slate-500 uppercase text-[9px] tracking-wider">Manual Overrides</span>
+                  <span className="block font-semibold text-zinc-400 uppercase text-[10px] tracking-wide">Manual Overrides</span>
 
                   <div className="space-y-3">
                     {/* Active override */}
-                    <div className="flex items-center justify-between p-2 bg-slate-950/20 border border-slate-900/60 rounded-xl">
-                      <span className="text-slate-400 font-medium">Reactivate / Suspend Account</span>
+                    <div className="flex items-center justify-between p-2.5 bg-zinc-950 border border-zinc-800/80 rounded-lg">
+                      <span className="text-zinc-300 font-medium">Account Active</span>
                       <input
                         type="checkbox"
                         checked={overrideActive}
                         onChange={(e) => setOverrideActive(e.target.checked)}
-                        className="w-4 h-4 text-red-500 focus:ring-0 rounded cursor-pointer"
+                        className="w-4 h-4 text-indigo-600 focus:ring-0 rounded cursor-pointer"
                       />
                     </div>
 
                     {/* Plan selection override */}
                     <div>
-                      <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">Plan Level</label>
+                      <label className="block text-xs font-medium text-zinc-400 mb-1">Plan Tier</label>
                       <select
                         value={overridePlanId}
                         onChange={(e) => setOverridePlanId(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-950 rounded-xl px-3 py-2 text-slate-300 focus:outline-none"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 focus:outline-none focus:border-indigo-500 transition"
                       >
                         <option value="starter">Starter</option>
                         <option value="growth">Growth</option>
@@ -354,12 +352,12 @@ export const AdminCompanies = () => {
 
                     {/* Trial end override */}
                     <div>
-                      <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1.5">Extend Trial Deadline</label>
+                      <label className="block text-xs font-medium text-zinc-400 mb-1">Trial Deadline</label>
                       <input
                         type="date"
                         value={overrideTrialDate}
                         onChange={(e) => setOverrideTrialDate(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-950 rounded-xl px-3 py-2 text-slate-300 focus:outline-none"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-200 focus:outline-none focus:border-indigo-500 transition"
                       />
                     </div>
                   </div>
@@ -368,7 +366,7 @@ export const AdminCompanies = () => {
                     <button
                       type="submit"
                       disabled={updating}
-                      className="w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition disabled:opacity-40"
+                      className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition disabled:opacity-50 shadow-sm"
                     >
                       {updating ? 'Applying settings...' : 'Apply Overrides'}
                     </button>
@@ -377,18 +375,18 @@ export const AdminCompanies = () => {
               </div>
 
               {/* Impersonation bar */}
-              <div className="border-t border-slate-800/60 pt-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-                <span className="text-[10px] text-slate-500 italic">
-                  Note: Actions taken during impersonation are fully logged to AdminAuditLogs.
+              <div className="border-t border-zinc-800/80 pt-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <span className="text-[11px] text-zinc-500 italic">
+                  Note: Actions during impersonation session are recorded to AdminAuditLogs.
                 </span>
                 
                 <button
                   type="button"
                   onClick={handleImpersonate}
-                  className="px-5 py-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white rounded-xl font-bold transition flex items-center space-x-2 shadow-lg shadow-red-500/10 shrink-0"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition flex items-center space-x-2 shadow-sm shrink-0"
                 >
                   <span>🔑</span>
-                  <span>Impersonate Company</span>
+                  <span>Impersonate Workspace</span>
                 </button>
               </div>
             </div>

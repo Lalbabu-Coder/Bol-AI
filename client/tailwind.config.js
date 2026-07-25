@@ -8,24 +8,27 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#f5f3ff',
-          100: '#edd8ff',
-          200: '#dbb8ff',
-          300: '#c58fff',
-          400: '#a85eff',
-          500: '#8b2eff', // Primary brand purple
-          600: '#7118eb',
-          700: '#580db8',
-          800: '#41098c',
-          900: '#2b0561',
+          50: '#eef2ff',
+          100: '#e0e7ff',
+          200: '#c7d2fe',
+          300: '#a5b4fc',
+          400: '#818cf8',
+          500: '#6366f1',
+          600: '#4f46e5',
+          700: '#4338ca',
+          800: '#3730a3',
+          900: '#312e81',
         },
-        slate: {
-          950: '#0b0f19', // Sleek dark body background
-        }
       },
       fontFamily: {
-        sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
       },
+      boxShadow: {
+        'subtle': '0 1px 2px 0 rgba(0, 0, 0, 0.5)',
+        'card': '0 4px 20px -2px rgba(0, 0, 0, 0.5)',
+        'glow': '0 0 20px -5px rgba(99, 102, 241, 0.25)',
+      }
     },
   },
   plugins: [],

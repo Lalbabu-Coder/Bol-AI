@@ -74,6 +74,8 @@ export const processDocument = async (documentId, fileBuffer, mimeType) => {
     ) {
       const parsedDocx = await mammoth.extractRawText({ buffer: fileBuffer });
       rawText = parsedDocx.value;
+    } else if (mimeType === 'text/plain') {
+      rawText = fileBuffer.toString('utf-8');
     } else {
       throw new Error(`Unsupported file type: ${mimeType}`);
     }

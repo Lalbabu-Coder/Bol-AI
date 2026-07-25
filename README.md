@@ -180,10 +180,14 @@ Sensitive credentials (such as `Company.whatsappConfig.accessToken` and `Company
 - **Twilio**: The server checks the `X-Twilio-Signature` header to ensure incoming call callbacks originate from Twilio.
 - **Meta / WhatsApp**: The server verifies payload integrity using the `X-Hub-Signature-256` header (HMAC-SHA256 signature calculated from the raw payload buffer using the `META_APP_SECRET`).
 
-### 4. Production Launch Considerations
-Before releasing this scaffold to production:
-- **Secrets Manager**: Migrate secrets from database documents / environment variables into an external key management vault (such as Google Cloud Secret Manager, AWS Secrets Manager, or HashiCorp Vault).
-- **HTTPS Enforcement**: Force secure TLS/SSL on all API paths.
-- **Dependency Auditing**: Perform regular vulnerability audits (`npm audit`) and update packages.
+### 5. AI Provider Configuration (Google Gemini & OpenAI)
+The platform supports modular AI provider selection via the `AI_PROVIDER` environment variable:
+- **`AI_PROVIDER=gemini`** (Default): Uses Google Generative AI SDK (`@google/generative-ai`) for embeddings (`text-embedding-004`, 768 dimensions) and completions (`gemini-1.5-flash`). Free API keys are available at [Google AI Studio](https://aistudio.google.com) without a credit card.
+- **`AI_PROVIDER=openai`**: Uses OpenAI API for embeddings (`text-embedding-3-small`, 1536 dimensions) and completions (`gpt-4o-mini`).
+
+To switch providers:
+1. Update `AI_PROVIDER` in `server/.env` to `gemini` or `openai`.
+2. Provide the corresponding API key (`GEMINI_API_KEY` or `OPENAI_API_KEY`).
+3. **Note on Embeddings**: Gemini `text-embedding-004` produces 768-dimensional vectors while OpenAI produces 1536-dimensional vectors. When switching `AI_PROVIDER`, previously-indexed Knowledge Base documents must be purged and re-indexed.
 
 # Bol-AI

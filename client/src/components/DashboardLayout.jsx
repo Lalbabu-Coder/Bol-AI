@@ -52,29 +52,32 @@ export const DashboardLayout = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
       <ImpersonationBanner />
       {/* Top Header Area */}
-      <header className="w-full glass border-b border-slate-900 sticky top-0 z-50">
+      <header className="w-full bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/80 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <span className="text-xl font-bold bg-gradient-to-r from-brand-300 to-violet-400 bg-clip-text text-transparent">
+              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold font-heading shadow-subtle">
+                B
+              </div>
+              <span className="text-lg font-bold font-heading tracking-tight text-zinc-100">
                 Bolo AI
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-500/10 border border-brand-500/20 text-brand-300">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-900 border border-zinc-800 text-zinc-300">
                 {company?.name || 'Workspace'}
               </span>
             </div>
             
             <div className="flex items-center space-x-4">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-slate-200">{user?.name}</p>
-                <p className="text-xs text-brand-400 capitalize font-medium">{user?.role} Access</p>
+                <p className="text-xs font-semibold text-zinc-200">{user?.name}</p>
+                <p className="text-[11px] text-zinc-400 capitalize font-medium">{user?.role} Access</p>
               </div>
               <button
                 onClick={logout}
-                className="px-4 py-2 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500 rounded-xl text-sm font-medium transition duration-150"
+                className="px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-zinc-100 rounded-lg text-xs font-medium transition"
               >
                 Log Out
               </button>
@@ -84,31 +87,38 @@ export const DashboardLayout = ({ children }) => {
       </header>
 
       {/* Workspace Panel */}
-      <div className="flex-grow flex max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 gap-8">
+      <div className="flex-grow flex max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-8">
         
         {/* Desktop Sidebar Navigation */}
-        <aside className="w-64 shrink-0 hidden md:block">
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition ${
-                    isActive
-                      ? 'bg-brand-500/10 border border-brand-500/20 text-brand-300'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 border border-transparent'
-                  }`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-                  </svg>
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
+        <aside className="w-60 shrink-0 hidden md:block">
+          <div className="sticky top-22 space-y-6">
+            <div>
+              <p className="px-3 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">
+                Workspace
+              </p>
+              <nav className="space-y-1">
+                {navItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-xs font-medium transition ${
+                        isActive
+                          ? 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-semibold'
+                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60 border border-transparent'
+                      }`}
+                    >
+                      <svg className={`w-4 h-4 ${isActive ? 'text-indigo-400' : 'text-zinc-400'}`} fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                      </svg>
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
         </aside>
 
         {/* Content Panel */}
@@ -116,17 +126,17 @@ export const DashboardLayout = ({ children }) => {
           <BillingBanner />
           
           {/* Mobile Horizontal Navigation Header */}
-          <nav className="flex md:hidden gap-2 mb-6 overflow-x-auto pb-2 border-b border-slate-900">
+          <nav className="flex md:hidden gap-1.5 mb-6 overflow-x-auto pb-2 border-b border-zinc-800/80">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+                  className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition ${
                     isActive
-                      ? 'bg-brand-500/10 border border-brand-500/20 text-brand-300'
-                      : 'text-slate-400 hover:text-slate-200 border border-transparent'
+                      ? 'bg-indigo-500/10 border border-indigo-500/20 text-indigo-300'
+                      : 'text-zinc-400 hover:text-zinc-200 border border-transparent'
                   }`}
                 >
                   <span>{item.name}</span>

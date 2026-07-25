@@ -112,15 +112,15 @@ export const Analytics = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8 pb-12">
+      <div className="space-y-6 pb-12 font-sans">
         {/* Header with Date Range Selector & Manual Refresh */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800/80 pb-5">
           <div>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight animate-in fade-in">
-              Analytics Overview
+            <h1 className="text-2xl font-bold font-heading text-zinc-100 tracking-tight">
+              Analytics & Overview
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
-              Visualize conversation volumes, channel shares, and assistant quality metrics.
+            <p className="text-zinc-400 text-xs mt-1">
+              Real-time insights across conversation volume, channel performance, and AI resolution quality.
             </p>
           </div>
           
@@ -128,7 +128,7 @@ export const Analytics = () => {
             <select
               value={rangeDays}
               onChange={(e) => setRangeDays(e.target.value)}
-              className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-300 font-semibold focus:outline-none focus:border-brand-500"
+              className="bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-200 font-medium focus:outline-none focus:border-indigo-500 transition"
             >
               <option value="7">Last 7 Days</option>
               <option value="30">Last 30 Days</option>
@@ -137,80 +137,87 @@ export const Analytics = () => {
 
             <button
               onClick={fetchAnalytics}
-              className="p-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 rounded-xl text-xs font-semibold transition flex items-center justify-center"
+              className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 rounded-lg text-xs font-medium transition flex items-center gap-1.5"
               title="Refresh"
             >
-              🔄
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+              <span>Refresh</span>
             </button>
           </div>
         </div>
 
         {!hasData ? (
           /* Empty State */
-          <div className="glass rounded-2xl p-16 text-center space-y-4 max-w-2xl mx-auto border border-dashed border-slate-800">
-            <div className="text-4xl">📊</div>
-            <h3 className="text-lg font-bold text-slate-200">No Analytics Available Yet</h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Analytics metrics will appear here once you start receiving customer interactions on Web Chat, WhatsApp, or voice support.
+          <div className="saas-panel p-12 text-center space-y-4 max-w-xl mx-auto border-dashed">
+            <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto text-indigo-400">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold font-heading text-zinc-100">No Analytics Data Available Yet</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mx-auto">
+              Analytics metrics will automatically populate once your AI assistant handles customer interactions on Web Chat, WhatsApp, or Voice.
             </p>
             <div className="pt-2">
               <Link
                 to="/channels"
-                className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold transition"
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition inline-block shadow-sm"
               >
-                Configure Communication Channels
+                Configure Channels →
               </Link>
             </div>
           </div>
         ) : (
           /* Analytics Dashboard grids */
-          <div className="space-y-8 animate-in fade-in">
+          <div className="space-y-6">
             {/* Top row: KPI cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {/* Total Conversations */}
-              <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-                <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Total Chats</span>
-                <span className="block text-2xl font-black text-white">{overview.totalConversations}</span>
+              <div className="saas-card p-4 space-y-1.5">
+                <span className="block text-zinc-400 text-xs font-medium">Total Conversations</span>
+                <span className="block text-2xl font-bold font-heading text-zinc-100">{overview.totalConversations}</span>
               </div>
 
               {/* Total Calls */}
-              <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-                <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Total Calls</span>
-                <span className="block text-2xl font-black text-white">{overview.totalCalls}</span>
+              <div className="saas-card p-4 space-y-1.5">
+                <span className="block text-zinc-400 text-xs font-medium">Total Phone Calls</span>
+                <span className="block text-2xl font-bold font-heading text-zinc-100">{overview.totalCalls}</span>
                 {overview.totalCalls > 0 && (
-                  <span className="block text-[10px] text-slate-400 italic">Avg: {formatCallDuration(overview.avgCallDuration)}</span>
+                  <span className="block text-[11px] text-zinc-400">Avg: {formatCallDuration(overview.avgCallDuration)}</span>
                 )}
               </div>
 
               {/* Avg Response Time */}
-              <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-                <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Avg Response Time</span>
-                <span className="block text-2xl font-black text-white">
+              <div className="saas-card p-4 space-y-1.5">
+                <span className="block text-zinc-400 text-xs font-medium">Avg Response Time</span>
+                <span className="block text-2xl font-bold font-heading text-zinc-100">
                   {overview.avgResponseTime > 0 ? `${overview.avgResponseTime}s` : '< 1s'}
                 </span>
               </div>
 
               {/* Resolution Rate */}
-              <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-                <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Resolution Rate</span>
-                <span className="block text-2xl font-black text-brand-300">{overview.resolutionRate}%</span>
+              <div className="saas-card p-4 space-y-1.5">
+                <span className="block text-zinc-400 text-xs font-medium">Resolution Rate</span>
+                <span className="block text-2xl font-bold font-heading text-indigo-400">{overview.resolutionRate}%</span>
               </div>
 
               {/* Average CSAT */}
-              <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-                <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Average CSAT</span>
-                <span className="block text-2xl font-black text-emerald-400">
-                  {overview.avgCsat > 0 ? `${overview.avgCsat} ★` : 'n/a'}
+              <div className="saas-card p-4 space-y-1.5">
+                <span className="block text-zinc-400 text-xs font-medium">Average CSAT Rating</span>
+                <span className="block text-2xl font-bold font-heading text-emerald-400">
+                  {overview.avgCsat > 0 ? `${overview.avgCsat} ★` : 'N/A'}
                 </span>
                 {csat && csat.totalRated > 0 && (
-                  <span className="block text-[10px] text-slate-400 italic">Rate: {csat.responseRate}% ({csat.totalRated} rated)</span>
+                  <span className="block text-[11px] text-zinc-400">{csat.responseRate}% rated ({csat.totalRated})</span>
                 )}
               </div>
             </div>
 
             {/* Time-series Volume Chart */}
-            <div className="glass rounded-2xl p-6 space-y-4">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">
+            <div className="saas-panel p-6 space-y-4">
+              <h3 className="text-xs font-semibold font-heading text-zinc-300 tracking-wide uppercase">
                 Conversation Volume Over Time
               </h3>
               <div className="h-80 w-full">
@@ -218,23 +225,23 @@ export const Analytics = () => {
                   <AreaChart data={volume} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorWeb" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
+                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
                         <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="colorWa" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.25} />
                         <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="colorPhone" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.2} />
+                        <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.25} />
                         <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid stroke="#1e293b/40" strokeDasharray="3 3" />
-                    <XAxis dataKey="date" stroke="#64748b" fontSize={10} />
-                    <YAxis stroke="#64748b" fontSize={10} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', fontSize: 12 }} />
-                    <Legend wrapperStyle={{ fontSize: 11 }} />
+                    <CartesianGrid stroke="#27272a" strokeDasharray="3 3" />
+                    <XAxis dataKey="date" stroke="#71717a" fontSize={10} />
+                    <YAxis stroke="#71717a" fontSize={10} />
+                    <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', fontSize: 12, color: '#f4f4f5' }} />
+                    <Legend wrapperStyle={{ fontSize: 11, color: '#a1a1aa' }} />
                     <Area type="monotone" dataKey="web_chat" name="Web Chat" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorWeb)" />
                     <Area type="monotone" dataKey="whatsapp" name="WhatsApp" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorWa)" />
                     <Area type="monotone" dataKey="phone" name="Phone Calls" stroke="#f59e0b" strokeWidth={2} fillOpacity={1} fill="url(#colorPhone)" />
@@ -244,10 +251,10 @@ export const Analytics = () => {
             </div>
 
             {/* Split Charts: Channel share & Outcome breakdown */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Channel Breakdown Share */}
-              <div className="glass rounded-2xl p-6 space-y-4">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <div className="saas-panel p-6 space-y-4">
+                <h3 className="text-xs font-semibold font-heading text-zinc-300 tracking-wide uppercase">
                   Channels Distribution Share
                 </h3>
                 <div className="h-64 flex items-center justify-center">
@@ -266,30 +273,30 @@ export const Analytics = () => {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', fontSize: 12 }} />
-                      <Legend wrapperStyle={{ fontSize: 11 }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', fontSize: 12, color: '#f4f4f5' }} />
+                      <Legend wrapperStyle={{ fontSize: 11, color: '#a1a1aa' }} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
               {/* Outcomes distribution */}
-              <div className="glass rounded-2xl p-6 space-y-4">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <div className="saas-panel p-6 space-y-4">
+                <h3 className="text-xs font-semibold font-heading text-zinc-300 tracking-wide uppercase">
                   AI Outcomes Classification
                 </h3>
                 <div className="h-64 w-full">
                   {outcomes.length === 0 ? (
-                    <div className="h-full flex items-center justify-center text-xs text-slate-500">
+                    <div className="h-full flex items-center justify-center text-xs text-zinc-500">
                       No outcomes detected yet.
                     </div>
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={outcomes} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid stroke="#1e293b/40" strokeDasharray="3 3" />
-                        <XAxis dataKey="name" stroke="#64748b" fontSize={9} />
-                        <YAxis stroke="#64748b" fontSize={10} />
-                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', fontSize: 12 }} />
+                        <CartesianGrid stroke="#27272a" strokeDasharray="3 3" />
+                        <XAxis dataKey="name" stroke="#71717a" fontSize={9} />
+                        <YAxis stroke="#71717a" fontSize={10} />
+                        <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', fontSize: 12, color: '#f4f4f5' }} />
                         <Bar dataKey="count" name="Outcome Count" fill="#6366f1" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
@@ -299,24 +306,24 @@ export const Analytics = () => {
             </div>
 
             {/* Split Charts: CSAT Distribution & Knowledge Gaps */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* CSAT Distribution */}
-              <div className="glass rounded-2xl p-6 space-y-4">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <div className="saas-panel p-6 space-y-4">
+                <h3 className="text-xs font-semibold font-heading text-zinc-300 tracking-wide uppercase">
                   CSAT Ratings Distribution
                 </h3>
                 <div className="h-64 w-full">
                   {csat && csat.totalRated === 0 ? (
-                    <div className="h-full flex items-center justify-center text-xs text-slate-500">
+                    <div className="h-full flex items-center justify-center text-xs text-zinc-500">
                       No satisfaction scores recorded yet.
                     </div>
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={csatChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid stroke="#1e293b/40" strokeDasharray="3 3" />
-                        <XAxis dataKey="stars" stroke="#64748b" fontSize={10} />
-                        <YAxis stroke="#64748b" fontSize={10} />
-                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', fontSize: 12 }} />
+                        <CartesianGrid stroke="#27272a" strokeDasharray="3 3" />
+                        <XAxis dataKey="stars" stroke="#71717a" fontSize={10} />
+                        <YAxis stroke="#71717a" fontSize={10} />
+                        <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', fontSize: 12, color: '#f4f4f5' }} />
                         <Bar dataKey="count" name="Ratings Count" fill="#10b981" radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
@@ -325,39 +332,39 @@ export const Analytics = () => {
               </div>
 
               {/* Knowledge Gaps */}
-              <div className="glass rounded-2xl p-6 flex flex-col justify-between space-y-4">
+              <div className="saas-panel p-6 flex flex-col justify-between space-y-4">
                 <div>
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
+                  <h3 className="text-xs font-semibold font-heading text-zinc-300 tracking-wide uppercase mb-1">
                     Top AI Knowledge Base Gaps
                   </h3>
-                  <p className="text-[11px] text-slate-500 mb-4">
-                    List of user questions that triggered "don't have information" style replies from the bot.
+                  <p className="text-[11px] text-zinc-400 mb-4">
+                    Questions where the assistant triggered a fallback reply.
                   </p>
 
-                  <div className="space-y-3 max-h-[170px] overflow-y-auto pr-1">
+                  <div className="space-y-2.5 max-h-[170px] overflow-y-auto pr-1">
                     {gaps.map((gap, index) => (
                       <div
                         key={index}
-                        className="p-3 bg-slate-950/40 border border-slate-900 rounded-xl flex justify-between items-center gap-4 text-xs"
+                        className="p-3 bg-zinc-950/60 border border-zinc-800/80 rounded-lg flex justify-between items-center gap-4 text-xs"
                       >
-                        <p className="text-slate-300 truncate font-medium">"{gap.question}"</p>
-                        <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-[10px] text-brand-300 font-bold shrink-0">
+                        <p className="text-zinc-300 truncate font-medium">"{gap.question}"</p>
+                        <span className="saas-badge-indigo shrink-0">
                           {gap.count} hits
                         </span>
                       </div>
                     ))}
                     {gaps.length === 0 && (
-                      <p className="text-xs text-slate-600 italic text-center py-12">
+                      <p className="text-xs text-zinc-500 italic text-center py-12">
                         No knowledge gaps identified in this period!
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-900/60 flex justify-end">
+                <div className="pt-4 border-t border-zinc-800/80 flex justify-end">
                   <Link
                     to="/knowledge-base"
-                    className="px-3.5 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold transition shrink-0"
+                    className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition shrink-0 shadow-sm"
                   >
                     Upload Document to KB →
                   </Link>

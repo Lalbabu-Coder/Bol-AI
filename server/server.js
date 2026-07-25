@@ -54,7 +54,25 @@ app.use(
 // 2. CORS configuration (allowing credential pass-through for HTTP-Only Refresh cookies)
 app.use(
   cors({
-    origin: config.clientUrl,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const allowedOrigins = [
+        config.clientUrl,
+        'http://localhost:5173',
+        'http://localhost',
+        'http://localhost:80',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1'
+      ];
+      if (
+        allowedOrigins.includes(origin) || 
+        origin.startsWith('http://localhost:') || 
+        origin.startsWith('http://127.0.0.1:')
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error('CORS policy error: Origin not allowed'));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']

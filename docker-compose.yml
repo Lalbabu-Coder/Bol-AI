@@ -33,7 +33,7 @@ services:
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=development_jwt_secret_must_be_long_and_secure_value_here
       - JWT_REFRESH_SECRET=development_jwt_refresh_secret_must_be_long_and_secure_value_here
-      - CLIENT_URL=http://localhost
+      - CLIENT_URL=http://localhost:5173
       - ENCRYPTION_KEY=12345678901234567890123456789012
       - OPENAI_API_KEY=dummy_openai_key
       - RAZORPAY_KEY_ID=dummy_key_id

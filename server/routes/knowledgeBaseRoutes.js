@@ -19,7 +19,8 @@ const fileFilter = (req, file, cb) => {
   const allowedMimeTypes = [
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword'
+    'application/msword',
+    'text/plain'
   ];
   
   if (allowedMimeTypes.includes(file.mimetype)) {

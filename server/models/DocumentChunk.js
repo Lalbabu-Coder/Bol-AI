@@ -18,9 +18,11 @@ const documentChunkSchema = new mongoose.Schema(
       required: [true, 'Vector embedding is required'],
       validate: {
         validator: function (v) {
-          return Array.isArray(v) && v.length === 1536; // OpenAI text-embedding-3-small vector size
+          // Gemini text-embedding-004 outputs 768 dimensions; OpenAI text-embedding-3-small outputs 1536 dimensions.
+          // Note: If switching AI_PROVIDER between OpenAI and Gemini, existing indexed documents must be re-indexed.
+          return Array.isArray(v) && (v.length === 768 || v.length === 1536 || v.length === 3072);
         },
-        message: 'Embedding vector must be exactly 1536 dimensions'
+        message: 'Embedding vector must match supported dimensions (768 for Gemini text-embedding-004, 1536 for OpenAI)'
       }
     },
     chunkIndex: {

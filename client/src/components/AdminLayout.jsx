@@ -35,16 +35,19 @@ export const AdminLayout = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col md:flex-row text-slate-100 font-sans antialiased">
+    <div className="min-h-screen bg-zinc-950 flex flex-col md:flex-row text-zinc-100 font-sans antialiased">
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 bg-slate-900 border-b md:border-b-0 md:border-r border-slate-900/60 flex flex-col justify-between shrink-0">
-        <div className="p-6 space-y-8">
+      <aside className="w-full md:w-60 bg-zinc-900 border-b md:border-b-0 md:border-r border-zinc-800/80 flex flex-col justify-between shrink-0">
+        <div className="p-5 space-y-6">
           {/* Logo brand */}
-          <div className="flex items-center space-x-2">
-            <span className="text-xl font-black bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">
-              BOLO ADMIN
+          <div className="flex items-center space-x-2.5">
+            <div className="w-7 h-7 rounded-lg bg-rose-600 flex items-center justify-center text-white font-bold text-xs font-heading">
+              A
+            </div>
+            <span className="text-base font-bold font-heading tracking-tight text-zinc-100">
+              Bolo Admin
             </span>
-            <span className="px-2 py-0.5 rounded bg-red-500/10 border border-red-500/25 text-[8px] text-red-400 font-bold uppercase tracking-wider">
+            <span className="px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/20 text-[9px] text-rose-400 font-semibold uppercase tracking-wider">
               Super
             </span>
           </div>
@@ -57,13 +60,13 @@ export const AdminLayout = ({ children }) => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold tracking-wide transition ${
+                  className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-xs font-medium transition ${
                     isActive
-                      ? 'bg-red-500/10 border border-red-500/20 text-red-400'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-950 border border-transparent'
+                      ? 'bg-rose-500/10 border border-rose-500/20 text-rose-300 font-semibold'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 border border-transparent'
                   }`}
                 >
-                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg className={`w-4 h-4 shrink-0 ${isActive ? 'text-rose-400' : 'text-zinc-400'}`} fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                   </svg>
                   <span>{item.name}</span>
@@ -74,18 +77,18 @@ export const AdminLayout = ({ children }) => {
         </div>
 
         {/* User Identity and Logout */}
-        <div className="p-6 border-t border-slate-950/60 flex items-center justify-between">
+        <div className="p-4 border-t border-zinc-800/80 flex items-center justify-between">
           <div className="flex flex-col min-w-0">
-            <span className="text-xs font-bold text-slate-200 truncate">Super Administrator</span>
-            <span className="text-[10px] text-slate-500 truncate">Platform Owner</span>
+            <span className="text-xs font-semibold text-zinc-200 truncate">Super Administrator</span>
+            <span className="text-[10px] text-zinc-400 truncate">Platform Owner</span>
           </div>
 
           <button
             onClick={handleLogout}
-            className="p-2 hover:bg-slate-950 rounded-xl transition text-slate-400 hover:text-red-400"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition text-zinc-400 hover:text-rose-400"
             title="Log Out"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
             </svg>
           </button>
@@ -93,7 +96,7 @@ export const AdminLayout = ({ children }) => {
       </aside>
 
       {/* Main Administrative Work Space */}
-      <main className="flex-grow p-6 md:p-10 overflow-y-auto max-w-7xl mx-auto w-full">
+      <main className="flex-grow p-6 md:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
         {children}
       </main>
     </div>

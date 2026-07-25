@@ -43,55 +43,56 @@ export const AdminMetrics = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">Platform Metrics</h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Aggregate revenue (MRR), company registrations, and overall conversation volume.
+      <div className="space-y-6 pb-12 font-sans">
+        {/* Header */}
+        <div className="border-b border-zinc-800/80 pb-5">
+          <h1 className="text-2xl font-bold font-heading text-zinc-100 tracking-tight">Platform Metrics</h1>
+          <p className="text-zinc-400 text-xs mt-1">
+            Aggregate MRR revenue, workspace company signups, and platform conversation volume.
           </p>
         </div>
 
         {/* KPI Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Total Tenants */}
-          <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-            <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Total Companies</span>
-            <span className="block text-2xl font-black text-white">{metrics.totalCompanies}</span>
-            <span className="block text-[10px] text-slate-400">
+          <div className="saas-card p-5 space-y-2">
+            <span className="block text-zinc-400 text-[10px] font-semibold uppercase tracking-wide">Total Workspaces</span>
+            <span className="block text-2xl font-bold font-heading text-zinc-100">{metrics.totalCompanies}</span>
+            <span className="block text-[11px] text-zinc-400">
               Active: {metrics.statusBreakdown.active} | Trial: {metrics.statusBreakdown.trialing}
             </span>
           </div>
 
           {/* Revenue MRR */}
-          <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-            <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Monthly Recurring Revenue</span>
-            <span className="block text-2xl font-black text-red-400">₹{metrics.totalRevenueThisMonth}</span>
-            <span className="block text-[10px] text-slate-400">From active billing subscriptions</span>
+          <div className="saas-card p-5 space-y-2">
+            <span className="block text-zinc-400 text-[10px] font-semibold uppercase tracking-wide">Monthly Recurring Revenue</span>
+            <span className="block text-2xl font-bold font-heading text-emerald-400">₹{metrics.totalRevenueThisMonth}</span>
+            <span className="block text-[11px] text-zinc-400">From active paid subscriptions</span>
           </div>
 
           {/* Total Chats */}
-          <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-            <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Conversations this Month</span>
-            <span className="block text-2xl font-black text-white">{metrics.totalConversationsThisMonth}</span>
-            <span className="block text-[10px] text-slate-400">Across all tenant environments</span>
+          <div className="saas-card p-5 space-y-2">
+            <span className="block text-zinc-400 text-[10px] font-semibold uppercase tracking-wide">Conversations this Month</span>
+            <span className="block text-2xl font-bold font-heading text-zinc-100">{metrics.totalConversationsThisMonth}</span>
+            <span className="block text-[11px] text-zinc-400">Across all active tenant environments</span>
           </div>
 
           {/* Churn Rate */}
-          <div className="bg-slate-900/40 border border-slate-900 p-5 rounded-2xl space-y-2">
-            <span className="block text-slate-500 text-[10px] font-bold uppercase tracking-wider">Churn Rate</span>
-            <span className="block text-2xl font-black text-amber-500">{metrics.churnRate}%</span>
-            <span className="block text-[10px] text-slate-400">Canceled relative to active subscriptions</span>
+          <div className="saas-card p-5 space-y-2">
+            <span className="block text-zinc-400 text-[10px] font-semibold uppercase tracking-wide">Churn Rate</span>
+            <span className="block text-2xl font-bold font-heading text-amber-400">{metrics.churnRate}%</span>
+            <span className="block text-[11px] text-zinc-400">Canceled relative to total active subscriptions</span>
           </div>
         </div>
 
         {/* Signup Volume Area chart */}
-        <div className="glass rounded-2xl p-6 space-y-4">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">
-            Company Signups (Last 30 Days)
+        <div className="saas-panel p-6 space-y-4">
+          <h3 className="text-xs font-semibold font-heading text-zinc-300 uppercase tracking-wide">
+            Workspace Signups (Last 30 Days)
           </h3>
           <div className="h-80 w-full">
             {metrics.signupsOverTime.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-xs text-slate-500 italic">
+              <div className="h-full flex items-center justify-center text-xs text-zinc-500 italic">
                 No signups recorded in the last 30 days.
               </div>
             ) : (
@@ -99,19 +100,19 @@ export const AdminMetrics = () => {
                 <AreaChart data={metrics.signupsOverTime} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorSignups" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid stroke="#1e293b/40" strokeDasharray="3 3" />
-                  <XAxis dataKey="date" stroke="#64748b" fontSize={10} />
-                  <YAxis stroke="#64748b" fontSize={10} />
-                  <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', fontSize: 12 }} />
+                  <CartesianGrid stroke="#27272a" strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="date" stroke="#71717a" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#71717a" fontSize={11} tickLine={false} axisLine={false} />
+                  <Tooltip contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', borderRadius: '8px', fontSize: '12px', color: '#f4f4f5' }} />
                   <Area
                     type="monotone"
                     dataKey="count"
                     name="Signups"
-                    stroke="#ef4444"
+                    stroke="#6366f1"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#colorSignups)"
