@@ -22,6 +22,10 @@ import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
+// Trust reverse proxy (e.g. ngrok in development, load balancer/reverse proxy in production)
+// so Express trusts the X-Forwarded-For header to correctly identify client IPs for rate limiting.
+app.set('trust proxy', 1);
+
 // 1. Security Headers
 app.use(
   helmet({

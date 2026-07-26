@@ -190,4 +190,8 @@ To switch providers:
 2. Provide the corresponding API key (`GEMINI_API_KEY` or `OPENAI_API_KEY`).
 3. **Note on Embeddings**: Gemini `text-embedding-004` produces 768-dimensional vectors while OpenAI produces 1536-dimensional vectors. When switching `AI_PROVIDER`, previously-indexed Knowledge Base documents must be purged and re-indexed.
 
+### 6. Dependency Security Audit Notes
+- **`esbuild` / `vite` (Dev-only dependencies)**: Moderate severity advisories regarding dev server port binding / local request handling (GHSA-67mh-4wv8-2f99) are present in devDependencies. These affect only the local development server during active local dev sessions and do not impact production builds or production runtime security. Therefore, updating to breaking major versions (Vite 8) is considered low priority and kept as-is.
+
 # Bol-AI
+
