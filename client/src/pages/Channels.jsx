@@ -5,6 +5,7 @@ import { DashboardLayout } from '../components/DashboardLayout.jsx';
 export const Channels = () => {
   const [waConfig, setWaConfig] = useState(null);
   const [voiceConfig, setVoiceConfig] = useState(null);
+  const [emailConfig, setEmailConfig] = useState(null);
   const [subData, setSubData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,6 +19,14 @@ export const Channels = () => {
   const [twilioAuthToken, setTwilioAuthToken] = useState('');
   const [twilioPhoneNumber, setTwilioPhoneNumber] = useState('');
 
+  // Email Form Inputs
+  const [emailAddress, setEmailAddress] = useState('');
+  const [appPassword, setAppPassword] = useState('');
+  const [imapHost, setImapHost] = useState('imap.gmail.com');
+  const [imapPort, setImapPort] = useState('993');
+  const [smtpHost, setSmtpHost] = useState('smtp.gmail.com');
+  const [smtpPort, setSmtpPort] = useState('587');
+
   // Status indicators
   const [waSubmitting, setWaSubmitting] = useState(false);
   const [waError, setWaError] = useState('');
@@ -27,6 +36,10 @@ export const Channels = () => {
   const [voiceError, setVoiceError] = useState('');
   const [voiceSuccess, setVoiceSuccess] = useState('');
 
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [emailSuccess, setEmailSuccess] = useState('');
+
   const [copiedWaUrl, setCopiedWaUrl] = useState(false);
   const [copiedWaToken, setCopiedWaToken] = useState(false);
   const [copiedVoiceUrl, setCopiedVoiceUrl] = useState(false);
@@ -35,9 +48,10 @@ export const Channels = () => {
   const fetchConfigs = async (showLoading = false) => {
     if (showLoading) setLoading(true);
     try {
-      const [waRes, voiceRes, subRes] = await Promise.all([
+      const [waRes, voiceRes, emailRes, subRes] = await Promise.all([
         api.get('/api/whatsapp/config'),
         api.get('/api/voice/config'),
+        api.get('/api/email/config'),
         api.get('/api/billing/subscription')
       ]);
 
@@ -51,6 +65,15 @@ export const Channels = () => {
       if (voiceRes.data.data.isConnected) {
         setTwilioAccountSid(voiceRes.data.data.twilioAccountSid);
         setTwilioPhoneNumber(voiceRes.data.data.twilioPhoneNumber);
+      }
+
+      setEmailConfig(emailRes.data.data);
+      if (emailRes.data.data.isConnected) {
+        setEmailAddress(emailRes.data.data.emailAddress || '');
+        setImapHost(emailRes.data.data.imapHost || 'imap.gmail.com');
+        setImapPort(emailRes.data.data.imapPort ? String(emailRes.data.data.imapPort) : '993');
+        setSmtpHost(emailRes.data.data.smtpHost || 'smtp.gmail.com');
+        setSmtpPort(emailRes.data.data.smtpPort ? String(emailRes.data.data.smtpPort) : '587');
       }
 
       setSubData(subRes.data.data);
@@ -136,6 +159,48 @@ export const Channels = () => {
       setTwilioAuthToken('');
     } catch (err) {
       alert('Failed to disconnect Twilio Voice.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Connect Email API
+  const handleConnectEmail = async (e) => {
+    e.preventDefault();
+    setEmailSubmitting(true);
+    setEmailError('');
+    setEmailSuccess('');
+
+    try {
+      const res = await api.post('/api/email/connect', {
+        emailAddress,
+        appPassword,
+        imapHost,
+        imapPort: Number(imapPort),
+        smtpHost,
+        smtpPort: Number(smtpPort)
+      });
+      setEmailConfig(res.data.data);
+      setEmailSuccess('Email inbox connected and verified successfully!');
+      setAppPassword('');
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Failed to connect email inbox. Verify credentials and settings.';
+      setEmailError(msg);
+    } finally {
+      setEmailSubmitting(false);
+    }
+  };
+
+  // Disconnect Email
+  const handleDisconnectEmail = async () => {
+    if (!confirm('Disconnect Email channel?')) return;
+    setLoading(true);
+    try {
+      await api.post('/api/email/disconnect');
+      setEmailConfig(prev => ({ ...prev, isConnected: false }));
+      setAppPassword('');
+    } catch (err) {
+      alert('Failed to disconnect Email channel.');
     } finally {
       setLoading(false);
     }
@@ -489,6 +554,187 @@ export const Channels = () => {
                       className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-lg disabled:opacity-50 transition shadow-sm"
                     >
                       {voiceSubmitting ? 'Verifying...' : 'Connect Twilio'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+
+            {/* 3. Email Inbox Card */}
+            <div className="saas-panel p-6 relative overflow-hidden space-y-6">
+              <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center border border-sky-500/20">
+                    <svg className="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold font-heading text-zinc-100">Email Support Inbox (IMAP + SMTP)</h3>
+                    <p className="text-xs text-zinc-400">Connect customer support inbox for automated RAG AI email responses</p>
+                  </div>
+                </div>
+                <div>
+                  {emailConfig?.isConnected ? (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                      Connected
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-900 border border-zinc-800 text-zinc-400">
+                      Not Configured
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {subData && !subData.limits?.channelsAllowed?.includes('email') ? (
+                <div className="bg-zinc-950/80 border border-zinc-800/80 rounded-xl p-6 text-center space-y-3 relative overflow-hidden">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold font-heading text-zinc-200">Email Channel Locked</h4>
+                    <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+                      Email inbox integration is available on Growth and Pro plans. Upgrade your subscription to enable IMAP &amp; SMTP connectivity.
+                    </p>
+                  </div>
+                  <div className="pt-2">
+                    <a
+                      href="/billing"
+                      className="inline-block px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition shadow-sm"
+                    >
+                      Upgrade Plan →
+                    </a>
+                  </div>
+                </div>
+              ) : emailConfig?.isConnected ? (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-xl bg-zinc-950/60 border border-zinc-800/80 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                    <div>
+                      <span className="block text-zinc-400 font-medium text-[11px]">Connected Email</span>
+                      <span className="text-zinc-200 font-mono mt-1 block">{emailConfig.emailAddress}</span>
+                    </div>
+                    <div>
+                      <span className="block text-zinc-400 font-medium text-[11px]">IMAP Host &amp; Port</span>
+                      <span className="text-zinc-200 font-mono mt-1 block">{emailConfig.imapHost}:{emailConfig.imapPort}</span>
+                    </div>
+                    <div>
+                      <span className="block text-zinc-400 font-medium text-[11px]">SMTP Host &amp; Port</span>
+                      <span className="text-zinc-200 font-mono mt-1 block">{emailConfig.smtpHost}:{emailConfig.smtpPort}</span>
+                    </div>
+                  </div>
+
+                  {emailConfig.lastCheckedAt && (
+                    <p className="text-xs text-zinc-500">
+                      Last Inbox Sweep: <span className="text-zinc-400">{new Date(emailConfig.lastCheckedAt).toLocaleString()}</span>
+                    </p>
+                  )}
+
+                  <div className="pt-4 border-t border-zinc-800/80 flex justify-end">
+                    <button
+                      onClick={handleDisconnectEmail}
+                      className="px-3.5 py-1.5 bg-rose-950/40 border border-rose-800/60 hover:bg-rose-900/60 text-rose-300 rounded-lg text-xs font-medium transition"
+                    >
+                      Disconnect Email Channel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleConnectEmail} className="space-y-4">
+                  <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-xs text-indigo-300 space-y-1">
+                    <span className="font-semibold block">Gmail Configuration Note:</span>
+                    <p className="text-[11px] leading-relaxed text-indigo-200/90">
+                      For Gmail: use <strong>smtp.gmail.com</strong> (port 587) and <strong>imap.gmail.com</strong> (port 993). You'll need to generate an App Password in your Google Account security settings (requires 2-Step Verification to be enabled).
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-zinc-300 mb-1">Email Address</label>
+                      <input
+                        type="email"
+                        value={emailAddress}
+                        onChange={(e) => setEmailAddress(e.target.value)}
+                        placeholder="support@mycompany.com"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-zinc-300 mb-1">App Password</label>
+                      <input
+                        type="password"
+                        value={appPassword}
+                        onChange={(e) => setAppPassword(e.target.value)}
+                        placeholder="•••• •••• •••• ••••"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 font-mono transition"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div className="sm:col-span-3">
+                      <label className="block text-xs font-medium text-zinc-300 mb-1">IMAP Host</label>
+                      <input
+                        type="text"
+                        value={imapHost}
+                        onChange={(e) => setImapHost(e.target.value)}
+                        placeholder="imap.gmail.com"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 font-mono transition"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-zinc-300 mb-1">IMAP Port</label>
+                      <input
+                        type="number"
+                        value={imapPort}
+                        onChange={(e) => setImapPort(e.target.value)}
+                        placeholder="993"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 font-mono transition"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div className="sm:col-span-3">
+                      <label className="block text-xs font-medium text-zinc-300 mb-1">SMTP Host</label>
+                      <input
+                        type="text"
+                        value={smtpHost}
+                        onChange={(e) => setSmtpHost(e.target.value)}
+                        placeholder="smtp.gmail.com"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 font-mono transition"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-zinc-300 mb-1">SMTP Port</label>
+                      <input
+                        type="number"
+                        value={smtpPort}
+                        onChange={(e) => setSmtpPort(e.target.value)}
+                        placeholder="587"
+                        className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3.5 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 font-mono transition"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {emailError && <div className="p-3 text-xs text-rose-300 bg-rose-950/40 border border-rose-800/60 rounded-lg">{emailError}</div>}
+                  {emailSuccess && <div className="p-3 text-xs text-emerald-300 bg-emerald-950/40 border border-emerald-800/60 rounded-lg">{emailSuccess}</div>}
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={emailSubmitting}
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-lg disabled:opacity-50 transition shadow-sm"
+                    >
+                      {emailSubmitting ? 'Testing & Connecting...' : 'Connect Email'}
                     </button>
                   </div>
                 </form>

@@ -19,6 +19,8 @@ import { startWorkflowSweep } from './services/workflow/workflowSweep.js';
 import billingRoutes from './routes/billingRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import emailRoutes from './routes/emailRoutes.js';
+import { startEmailPoller } from './services/email/emailPoller.js';
 
 const app = express();
 
@@ -124,6 +126,7 @@ app.use('/api/workflows', workflowRoutes); // Mount protected workflow rules & l
 app.use('/api/billing', billingRoutes); // Mount billing & subscription endpoints
 app.use('/api/analytics', analyticsRoutes); // Mount analytics dashboards endpoints
 app.use('/api/admin', adminRoutes); // Mount platform superadmin endpoints
+app.use('/api/email', emailRoutes); // Mount email inbox configuration endpoints
 
 
 // 7. Undefined Route Handler
@@ -149,6 +152,9 @@ const startServer = async () => {
   
   // Start the automated inactivity checks sweep
   startWorkflowSweep();
+  
+  // Start the background email inbox poller
+  startEmailPoller();
 };
 
 startServer();

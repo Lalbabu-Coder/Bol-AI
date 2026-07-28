@@ -19,7 +19,7 @@ export const plans = {
       maxConversationsPerMonth: 500,
       maxKnowledgeBaseDocs: 20,
       maxWorkflowRules: 10,
-      channelsAllowed: ['web_chat', 'whatsapp']
+      channelsAllowed: ['web_chat', 'whatsapp', 'email']
     },
     razorpayPlanId: process.env.RAZORPAY_PLAN_GROWTH || ''
   },
@@ -31,7 +31,7 @@ export const plans = {
       maxConversationsPerMonth: 5000,
       maxKnowledgeBaseDocs: 100,
       maxWorkflowRules: 50,
-      channelsAllowed: ['web_chat', 'whatsapp', 'phone']
+      channelsAllowed: ['web_chat', 'whatsapp', 'phone', 'email']
     },
     razorpayPlanId: process.env.RAZORPAY_PLAN_PRO || ''
   }

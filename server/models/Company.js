@@ -97,6 +97,44 @@ const companySchema = new mongoose.Schema(
         type: Boolean,
         default: false
       }
+    },
+    emailConfig: {
+      imapHost: {
+        type: String,
+        default: null
+      },
+      imapPort: {
+        type: Number,
+        default: 993
+      },
+      smtpHost: {
+        type: String,
+        default: null
+      },
+      smtpPort: {
+        type: Number,
+        default: 587
+      },
+      emailAddress: {
+        type: String,
+        default: null
+      },
+      appPassword: {
+        type: String,
+        default: null // Encrypted before writing to DB
+      },
+      isConnected: {
+        type: Boolean,
+        default: false
+      },
+      firstConnectedAt: {
+        type: Date,
+        default: null
+      },
+      lastCheckedAt: {
+        type: Date,
+        default: null
+      }
     }
   },
   {
@@ -112,6 +150,9 @@ companySchema.pre('save', function (next) {
   if (this.voiceConfig && this.isModified('voiceConfig.twilioAuthToken') && this.voiceConfig.twilioAuthToken) {
     this.voiceConfig.twilioAuthToken = encrypt(this.voiceConfig.twilioAuthToken);
   }
+  if (this.emailConfig && this.isModified('emailConfig.appPassword') && this.emailConfig.appPassword) {
+    this.emailConfig.appPassword = encrypt(this.emailConfig.appPassword);
+  }
   next();
 });
 
@@ -123,6 +164,9 @@ companySchema.post('init', function (doc) {
   if (doc.voiceConfig && doc.voiceConfig.twilioAuthToken) {
     doc.voiceConfig.twilioAuthToken = decrypt(doc.voiceConfig.twilioAuthToken);
   }
+  if (doc.emailConfig && doc.emailConfig.appPassword) {
+    doc.emailConfig.appPassword = decrypt(doc.emailConfig.appPassword);
+  }
 });
 
 // Post-save hook: Decrypt tokens back in-memory for active session use
@@ -132,6 +176,9 @@ companySchema.post('save', function (doc) {
   }
   if (doc.voiceConfig && doc.voiceConfig.twilioAuthToken) {
     doc.voiceConfig.twilioAuthToken = decrypt(doc.voiceConfig.twilioAuthToken);
+  }
+  if (doc.emailConfig && doc.emailConfig.appPassword) {
+    doc.emailConfig.appPassword = decrypt(doc.emailConfig.appPassword);
   }
 });
 

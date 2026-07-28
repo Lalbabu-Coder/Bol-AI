@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { sendEmail as sendMail } from '../email/smtpService.js';
 import { Conversation } from '../../models/Conversation.js';
 import { Contact } from '../../models/Contact.js';
 import { WorkflowRule } from '../../models/WorkflowRule.js';
@@ -6,38 +6,6 @@ import { WorkflowLog } from '../../models/WorkflowLog.js';
 import { generateConversationSummary } from './summaryService.js';
 import { sendMessage as sendWhatsAppMessage } from '../whatsapp/whatsappService.js';
 import { runWithTenant } from '../../utils/tenantContext.js';
-
-/**
- * Sends an email using Nodemailer with SMTP credentials from environment variables.
- */
-const sendMail = async ({ to, subject, text }) => {
-  const host = process.env.SMTP_HOST;
-  const port = parseInt(process.env.SMTP_PORT, 10) || 587;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const from = process.env.SMTP_FROM || 'no-reply@bolo-ai.com';
-
-  if (!host || !user || !pass) {
-    throw new Error('SMTP configurations (SMTP_HOST, SMTP_USER, SMTP_PASS) are missing in environment variables.');
-  }
-
-  const transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: {
-      user,
-      pass
-    }
-  });
-
-  await transporter.sendMail({
-    from,
-    to,
-    subject,
-    text
-  });
-};
 
 /**
  * Closes the conversation session and executes all active workflow rules.

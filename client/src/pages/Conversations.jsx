@@ -109,7 +109,7 @@ export const Conversations = () => {
             </h3>
 
             {/* Channel Filters */}
-            <div className="grid grid-cols-3 gap-1 bg-zinc-950 p-1 rounded-lg mb-4 text-xs border border-zinc-800">
+            <div className="grid grid-cols-4 gap-1 bg-zinc-950 p-1 rounded-lg mb-4 text-xs border border-zinc-800">
               <button
                 onClick={() => setChannelFilter('all')}
                 className={`py-1 rounded transition text-xs font-medium ${
@@ -138,7 +138,17 @@ export const Conversations = () => {
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
-                WhatsApp
+                WA
+              </button>
+              <button
+                onClick={() => setChannelFilter('email')}
+                className={`py-1 rounded transition text-xs font-medium ${
+                  channelFilter === 'email'
+                    ? 'bg-zinc-900 text-sky-300 font-semibold border border-zinc-800'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                Email
               </button>
             </div>
 
@@ -174,9 +184,13 @@ export const Conversations = () => {
                           <span className={`text-[9px] uppercase font-mono px-1.5 py-0.5 rounded ${
                             conv.channel === 'whatsapp' 
                               ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                              : conv.channel === 'email'
+                              ? 'bg-sky-500/10 text-sky-400 border border-sky-500/20'
+                              : conv.channel === 'phone'
+                              ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
                               : 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
                           }`}>
-                            {conv.channel === 'whatsapp' ? 'WA' : 'WEB'}
+                            {conv.channel === 'whatsapp' ? 'WA' : conv.channel === 'email' ? 'EMAIL' : conv.channel === 'phone' ? 'PHONE' : 'WEB'}
                           </span>
                         </div>
                         <span className="text-[10px] text-zinc-500 whitespace-nowrap">

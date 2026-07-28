@@ -140,6 +140,10 @@ For external channels like Meta WhatsApp and Twilio Voice to communicate with yo
    - **Twilio Voice callback**: `https://xxxx.ngrok-free.app/api/voice/incoming-call?companyId=<your_company_id>`
 5. Register these callback endpoints in your Twilio / Meta Developer console to start voice agent calls or WhatsApp message flows!
 
+### 5. Email Inbox Channel Setup (IMAP + SMTP)
+> ⚠️ **CRITICAL REQUIREMENT**: The Email Channel MUST be connected exclusively to a **dedicated customer support inbox** (e.g. `support@yourcompany.com` or `help@yourcompany.com`).
+> **DO NOT** connect a personal or general-purpose inbox that receives newsletters, marketing emails, job alerts, or personal correspondence, as doing so may cause automated AI replies to be sent to non-customer senders.
+
 ---
 
 ## 🔒 API Specifications

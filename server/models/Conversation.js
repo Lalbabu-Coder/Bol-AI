@@ -6,8 +6,8 @@ const conversationSchema = new mongoose.Schema(
     channel: {
       type: String,
       enum: {
-        values: ['web_chat', 'whatsapp', 'phone'],
-        message: 'Channel must be web_chat, whatsapp, or phone'
+        values: ['web_chat', 'whatsapp', 'phone', 'email'],
+        message: 'Channel must be web_chat, whatsapp, phone, or email'
       },
       default: 'web_chat',
       required: true
